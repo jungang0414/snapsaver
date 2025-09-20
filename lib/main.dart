@@ -1,6 +1,21 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 
+// 假資料的結構
+class Transaction {
+  final String title;
+  final String category;
+  final double amount;
+  final DateTime date;
+
+  Transaction({
+    required this.title,
+    required this.category,
+    required this.amount,
+    required this.date,
+  });
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,14 +33,68 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      // 移除 'const' 關鍵字
+      home: HomePage(),
     );
   }
 }
 
 // 這是我們今天主要的工作區域
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  // 移除 'const' 關鍵字
+  HomePage({super.key});
+
+  // 建立一個假資料列表
+  final List<Transaction> transactions = [
+    Transaction(
+      title: '7-Eleven 便利商店',
+      category: '餐飲',
+      amount: 85,
+      date: DateTime(2024, 6, 1),
+    ),
+    Transaction(
+      title: '全聯福利中心',
+      category: '購物',
+      amount: 750,
+      date: DateTime(2024, 6, 2),
+    ),
+    Transaction(
+      title: '週末電影票',
+      category: '娛樂',
+      amount: 540,
+      date: DateTime(2024, 6, 3),
+    ),
+    Transaction(
+      title: '捷運月票',
+      category: '交通',
+      amount: 1280,
+      date: DateTime(2024, 6, 4),
+    ),
+    Transaction(
+      title: '電信費',
+      category: '生活繳費',
+      amount: 499,
+      date: DateTime(2024, 6, 5),
+    ),
+    Transaction(
+      title: '捷運月票',
+      category: '交通',
+      amount: 1280,
+      date: DateTime(2024, 7, 4),
+    ),
+    Transaction(
+      title: '捷運月票',
+      category: '交通',
+      amount: 1280,
+      date: DateTime(2024, 8, 4),
+    ),
+    Transaction(
+      title: '捷運月票',
+      category: '交通',
+      amount: 1280,
+      date: DateTime(2024, 9, 4),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +157,7 @@ class HomePage extends StatelessWidget {
                   // 第二個按鈕
                   child: Column(
                     children: [
-                      Icon(
-                        Icons.edit,
-                        size: 300,
-                        color: Colors.deepPurple,
-                      ), // 建議調整 size 為 40，避免過大
+                      Icon(Icons.edit, size: 40, color: Colors.deepPurple),
                       Text('手動記帳'),
                     ],
                   ),
@@ -107,6 +172,43 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // 分隔線
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Divider(),
+          ),
+
+          // 使用 Expanded 包裹 ListView.builder
+          Expanded(
+            child: ListView.builder(
+              itemCount: transactions.length,
+              itemBuilder: (BuildContext context, int index) {
+                final transaction = transactions[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 6.0,
+                  ),
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.receipt_long,
+                      color: Colors.deepPurple,
+                    ),
+                    title: Text(transaction.title),
+                    subtitle: Text(transaction.category),
+                    trailing: Text(
+                      'NT\$ ${transaction.amount.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
