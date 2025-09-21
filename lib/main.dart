@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // 假資料的結構
 class Transaction {
@@ -29,9 +30,12 @@ class MyApp extends StatelessWidget {
       // 關閉右上角的 Debug 標籤
       debugShowCheckedModeBanner: false,
       title: 'SnapSaver',
+      // 就是它！App 的風格都由這裡定義
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
+
+        textTheme: GoogleFonts.notoSansTcTextTheme(Theme.of(context).textTheme),
       ),
       // 移除 'const' 關鍵字
       home: HomePage(),
@@ -118,7 +122,9 @@ class HomePage extends StatelessWidget {
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Column(
+            // 【重要觀念修正】: 因為下方的 Text Widget 使用了 Theme.of(context)，
+            // 它是一個執行時的值，所以這裡的 Column 不能是 const。
+            child: Column(
               // 這個內部的 Column，我們希望文字靠左對齊
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -128,7 +134,9 @@ class HomePage extends StatelessWidget {
                 ),
                 Text(
                   'NT\$ 12,345',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    color: Colors.teal.shade700,
+                  ),
                 ),
               ],
             ),
