@@ -1,6 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:snapsaver/add_transaction_page.dart';
 
 // 假資料的結構
 class Transaction {
@@ -106,6 +107,16 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('省錢拍拍 (SnapSaver)'),
         backgroundColor: Colors.deepPurple.shade200, // 給 AppBar 一點顏色
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.push
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddTransactionPage()),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
       body: Column(
         // Column 的主軸是垂直的，我們希望內容從頂部開始
