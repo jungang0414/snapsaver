@@ -1,5 +1,6 @@
 // lib/add_transaction_page.dart (完整範例)
 import 'package:flutter/material.dart';
+import 'package:snapsaver/models/transction.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({super.key});
@@ -25,15 +26,16 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   void _submitForm() {
     // 3. 觸發驗證
     if (_formKey.currentState!.validate()) {
-      // 如果驗證通過
-      final title = _titleController.text;
-      final amount = double.tryParse(_amountController.text) ?? 0.0;
+      /// 1. 根據表單內容，建立一個新的 Transaction 物件
+      final newTransaction = Transaction(
+        title: _titleController.text,
+        amount: double.parse(_amountController.text),
+        category: '測試分類', // 暫時寫死
+        date: DateTime.now(),
+      );
 
-      print('品項: $title, 金額: $amount');
-      // 在這裡，我們未來會將資料傳回主頁面
-
-      // 驗證通過後，返回上一頁
-      Navigator.pop(context);
+      // 2. 將 newTransaction 作為參數傳入 pop 方法
+      Navigator.pop(context, newTransaction);
     }
   }
 

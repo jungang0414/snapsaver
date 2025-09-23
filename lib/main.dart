@@ -2,21 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:snapsaver/add_transaction_page.dart';
+import 'package:snapsaver/models/transction.dart';
 
-// 假資料的結構
-class Transaction {
-  final String title;
-  final String category;
-  final double amount;
-  final DateTime date;
-
-  Transaction({
-    required this.title,
-    required this.category,
-    required this.amount,
-    required this.date,
-  });
-}
+// 將 Transaction 類別移到 models 統一管理
 
 void main() {
   runApp(const MyApp());
@@ -38,19 +26,24 @@ class MyApp extends StatelessWidget {
 
         textTheme: GoogleFonts.notoSansTcTextTheme(Theme.of(context).textTheme),
       ),
-      // 移除 'const' 關鍵字
-      home: HomePage(),
+      // 改回 const
+      home: const HomePage(),
     );
   }
 }
 
 // 這是我們今天主要的工作區域
-class HomePage extends StatelessWidget {
-  // 移除 'const' 關鍵字
-  HomePage({super.key});
+class HomePage extends StatefulWidget {
+  // 因為 HomePage 不再持有狀態，建構子可以再次變回 const
+  const HomePage({super.key});
 
-  // 建立一個假資料列表
-  final List<Transaction> transactions = [
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // 建立一個假資料列表 (移除 final)
+  List<Transaction> transactions = [
     Transaction(
       title: '7-Eleven 便利商店',
       category: '餐飲',
@@ -101,6 +94,25 @@ class HomePage extends StatelessWidget {
     ),
   ];
 
+  void _navigateToAddTransactionPage() async {
+    // 使用 await "等待" AddTransactionPage 關閉並回傳資料
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddTransactionPage()),
+    );
+
+    // 當 result 不是 null 時 (代表使用者是儲存而不是直接返回)
+    // 我們需要更新狀態
+    if (result != null && result is Transaction) {
+      // 呼叫 setState 來更新 UI
+      setState(() {
+        // 在這裡更新我們的列表
+        // 使用 insert(0, ...) 將新項目加到列表最前面，以便立即看到
+        transactions.insert(0, result);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,13 +121,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.deepPurple.shade200, // 給 AppBar 一點顏色
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddTransactionPage()),
-          );
-        },
+        onPressed: _navigateToAddTransactionPage,
         child: const Icon(Icons.add),
       ),
       body: Column(
